@@ -1,0 +1,117 @@
+networks:
+  lakehouse:
+    driver: bridge
+
+volumes:
+  minio-data:
+  postgres-data:
+  kafka-data:
+  grafana-data:
+  prometheus-data:
+  milvus-etcd:
+  milvus-minio:
+  milvus-data:
+  mysql-data:
+  spark-ivy-cache:
+
+services:
+  # ============================================
+  # Apache Spark - Master
+  # ============================================
+  spark-master:
+    image: apache/spark:3.5.0
+    container_name: spark-master
+    cpus: "1.0"
+    mem_limit: 2g
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "6066:6066"
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
+      - SPARK_MASTER_OPTS=-Dspark.master.rest.enabled=true -Dspark.master.rest.port=6066
+    volumes:
+      - ./pipelines:/opt/spark/pipelines
+      - ./docker/spark/conf:/opt/spark/conf
+      - spark-ivy-cache:/tmp/.ivy2
+    networks:
+      - lakehouse
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "spark-master", "--port", "7077", "--webui-port", "8080"]
+
+  # Apache Spark - Worker 1
+  spark-worker-1:
+    image: apache/spark:3.5.0
+    container_name: spark-worker-1
+    cpus: "1.0"
+    mem_limit: 2g
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=2g
+    volumes:
+      - ./pipelines:/opt/spark/pipelines
+      - ./docker/spark/conf:/opt/spark/conf
+      - spark-ivy-cache:/tmp/.ivy2
+    networks:
+      - lakehouse
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077"]
+
+  # Apache Spark - Worker 2
+  spark-worker-2:
+    image: apache/spark:3.5.0
+    container_name: spark-worker-2
+    cpus: "1.0"
+    mem_limit: 2g
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=2g
+    volumes:
+      - ./pipelines:/opt/spark/pipelines
+      - ./docker/spark/conf:/opt/spark/conf
+      - spark-ivy-cache:/tmp/.ivy2
+    networks:
+      - lakehouse
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077"]
+
+  # Apache Spark - Submit Client
+  spark-submit:
+    image: apache/spark:3.5.0
+    container_name: spark-submit
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    volumes:
+      - ./pipelines:/opt/spark/pipelines
+      - ./docker/spark/conf:/opt/spark/conf
+      - spark-ivy-cache:/tmp/.ivy2
+    working_dir: /opt/spark/pipelines
+    networks:
+      - lakehouse
+    command: ["sleep", "infinity"]
+
+  # MySQL for Spark JDBC examples
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=sparkdb
+      - MYSQL_USER=spark
+      - MYSQL_PASSWORD=sparkpass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - lakehouse
