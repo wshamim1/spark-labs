@@ -20,6 +20,8 @@ This repository contains updated PySpark code examples following modern best pra
 - **`spark_mysql.py`** - Alternative MySQL integration example
 - **`spark_orcl.py`** - MySQL/Oracle database integration
 - **`mysql_multi_connection.py`** - Multiple MySQL connections example
+- **`a_read_to_mysql.py`** - Read and write MySQL with Spark
+- **`a_read_to_mysql_cloud.py`** - Cloud MySQL read/write example
 - **`kudu_demo.py`** - Apache Kudu integration
 - **`pyspark_from_hive.py`** - Hive integration with SparkSession
 
@@ -37,18 +39,44 @@ This repository contains updated PySpark code examples following modern best pra
 ### NoSQL
 - **`cloudant.py`** - IBM Cloudant NoSQL database integration
 
-### Basic Examples
+### Core Spark Examples
 - **`basic_spark_app.py`** - Basic Spark application with UI
-- **`rdd_operations_tutorial.py`** - RDD operations tutorial
 - **`sample_spark.py`** - Basic Spark configuration example
-- **`mysql_multi_connection.py`** - Multiple MySQL connections example
+- **`rdd_operations_tutorial.py`** - RDD operations tutorial
+- **`a_wordcount.py`** - Word count using RDDs
 
-### Documentation
+### Spark SQL and DataFrames
+- **`a_sql_example.py`** - Spark SQL basics
+- **`a_join_example.py`** - Join operations example
+- **`a_read_write_formats.py`** - Read/write Parquet/JSON/CSV
+
+### End-to-End Pipelines
+- **`example_etl_pipeline.py`** - End-to-end ETL pipeline
+- **`example_data_quality.py`** - Data quality checks
+- **`example_sales_analysis.py`** - Sales analytics pipeline
+- **`example_customer_rfm.py`** - Customer RFM segmentation
+- **`example_job.py`** - Job orchestration example
+
+### Documentation & Utilities
 - **`commands.sh`** - Useful Spark and Hadoop commands
-- **`HiveTutorial.md`** - Hive SQL tutorial
-- **`loadcsvHiveTable.md`** - Loading CSV into Hive tables
+- **`CLOUD_DEPLOYMENT.md`** - Cloud deployment notes
 
 ## 🚀 Getting Started
+
+### Run with Docker
+
+```bash
+# Build and start the stack
+docker compose up -d --build
+
+# Follow logs (optional)
+docker compose logs -f
+
+# Stop the stack
+docker compose down
+```
+
+### Running from the Host (no Docker)
 
 ### Prerequisites
 
@@ -101,16 +129,32 @@ python basic_spark_app.py
 # RDD operations tutorial
 python rdd_operations_tutorial.py
 
+# SQL + joins
+python a_sql_example.py
+python a_join_example.py
+
+# Read/write formats
+python a_read_write_formats.py
+
 # MySQL integration
 python pyspark_mysql.py
+python a_read_to_mysql.py
+python a_read_to_mysql_cloud.py
 python mysql_multi_connection.py
 
 # S3 operations
 python read_s3.py
+python read_s3_csv.py
 python write_to_s3.py
 
 # Kafka streaming
 python write_to_kafka.py
+
+# End-to-end pipelines
+python example_etl_pipeline.py
+python example_data_quality.py
+python example_sales_analysis.py
+python example_customer_rfm.py
 
 # Submit to cluster
 spark-submit --master yarn --deploy-mode cluster your_script.py
@@ -176,6 +220,6 @@ Feel free to submit issues and enhancement requests!
 
 ---
 
-**Last Updated**: January 2026  
+**Last Updated**: February 2026  
 **PySpark Version**: 3.5+  
 **Python Version**: 3.8+
