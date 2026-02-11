@@ -57,6 +57,12 @@ This repository contains updated PySpark code examples following modern best pra
 - **`example_customer_rfm.py`** - Customer RFM segmentation
 - **`example_job.py`** - Job orchestration example
 
+### Observability & Log Processing
+- **`example_log_processing.py`** - Parse and aggregate application logs
+
+### AI/ML
+- **`example_ml_pipeline.py`** - Spark ML pipeline with feature engineering
+
 ### Documentation & Utilities
 - **`commands.sh`** - Useful Spark and Hadoop commands
 - **`CLOUD_DEPLOYMENT.md`** - Cloud deployment notes
@@ -155,6 +161,12 @@ python example_etl_pipeline.py
 python example_data_quality.py
 python example_sales_analysis.py
 python example_customer_rfm.py
+
+# Log processing
+python example_log_processing.py
+
+# AI/ML example
+python example_ml_pipeline.py
 
 # Submit to cluster
 spark-submit --master yarn --deploy-mode cluster your_script.py
