@@ -61,6 +61,40 @@ All jobs are in `pipelines/` and mounted to `/opt/spark/pipelines`.
     /opt/spark/pipelines/a_read_to_mysql.py
   ```
 
+## Real-world use cases
+
+### Customer RFM Analysis
+Recency-Frequency-Monetary analysis for customer segmentation:
+```bash
+podman compose exec spark-submit /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /opt/spark/pipelines/example_customer_rfm.py
+```
+
+### ETL Pipeline
+Data cleaning, validation, and enrichment:
+```bash
+podman compose exec spark-submit /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /opt/spark/pipelines/example_etl_pipeline.py
+```
+
+### Sales Analysis
+Multi-dimensional sales reporting by category and store:
+```bash
+podman compose exec spark-submit /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /opt/spark/pipelines/example_sales_analysis.py
+```
+
+### Data Quality Checks
+Identify nulls, duplicates, and invalid records:
+```bash
+podman compose exec spark-submit /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /opt/spark/pipelines/example_data_quality.py
+```
+
 ## MySQL details
 - Host (from containers): `mysql`
 - Port: `3306`
