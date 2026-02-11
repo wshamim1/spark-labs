@@ -1,107 +1,181 @@
-# Spark Lab
+# PySpark Tutorials Collection
 
-Local Spark cluster with submit client and MySQL example using Podman/Docker Compose.
+A comprehensive collection of PySpark 3.5+ examples and tutorials demonstrating integration with various data sources and platforms.
 
-## Services
-- Spark master and 2 workers
-- Spark submit client
-- MySQL 8.0
+## 📋 Overview
 
-## Start
-1. Start the stack:
-   ```bash
-   podman compose up -d
-   ```
+This repository contains updated PySpark code examples following modern best practices for Spark 3.5+. All examples have been updated with:
 
-2. Verify Spark UI:
-   - http://localhost:8080
+- ✅ Latest PySpark 3.5+ syntax
+- ✅ Environment variable-based configuration for security
+- ✅ Type hints and proper documentation
+- ✅ Updated dependencies (MySQL Connector 8.3.0, AWS SDK 2.25.x, etc.)
+- ✅ Modern Spark configurations (adaptive query execution, etc.)
+- ✅ Error handling and logging
 
-## Submit example jobs
-All jobs are in `pipelines/` and mounted to `/opt/spark/pipelines`.
+## 🗂️ File Structure
 
-- Example aggregation:
-  ```bash
-  podman compose exec spark-submit /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /opt/spark/pipelines/example_job.py
-  ```
+### Database Integrations
+- **`pyspark_mysql.py`** - MySQL database integration with JDBC
+- **`spark_mysql.py`** - Alternative MySQL integration example
+- **`spark_orcl.py`** - MySQL/Oracle database integration
+- **`mysql_multi_connection.py`** - Multiple MySQL connections example
+- **`kudu_demo.py`** - Apache Kudu integration
+- **`pyspark_from_hive.py`** - Hive integration with SparkSession
 
-- Word count:
-  ```bash
-  podman compose exec spark-submit /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /opt/spark/pipelines/a_wordcount.py
-  ```
+### Cloud Storage (AWS S3)
+- **`read_s3.py`** - Read JSON files from S3
+- **`read_s3_csv.py`** - Read CSV files from S3
+- **`write_to_s3.py`** - Write data to S3 in JSON format
 
-- SQL example:
-  ```bash
-  podman compose exec spark-submit /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /opt/spark/pipelines/a_sql_example.py
-  ```
+### Object Storage
+- **`connect_to_minio.py`** - MinIO S3-compatible storage with Iceberg support
 
-- Join example:
-  ```bash
-  podman compose exec spark-submit /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /opt/spark/pipelines/a_join_example.py
-  ```
+### Streaming
+- **`write_to_kafka.py`** - Apache Kafka streaming integration
 
-- Read CSV and write Parquet/JSON/CSV:
-  ```bash
-  podman compose exec spark-submit /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /opt/spark/pipelines/a_read_write_formats.py
-  ```
+### NoSQL
+- **`cloudant.py`** - IBM Cloudant NoSQL database integration
 
-- Read CSV and write to MySQL (JDBC driver is auto-downloaded):
-  ```bash
-  podman compose exec spark-submit /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /opt/spark/pipelines/a_read_to_mysql.py
-  ```
+### Basic Examples
+- **`basic_spark_app.py`** - Basic Spark application with UI
+- **`rdd_operations_tutorial.py`** - RDD operations tutorial
+- **`sample_spark.py`** - Basic Spark configuration example
+- **`mysql_multi_connection.py`** - Multiple MySQL connections example
 
-## Real-world use cases
+### Documentation
+- **`commands.sh`** - Useful Spark and Hadoop commands
+- **`HiveTutorial.md`** - Hive SQL tutorial
+- **`loadcsvHiveTable.md`** - Loading CSV into Hive tables
 
-### Customer RFM Analysis
-Recency-Frequency-Monetary analysis for customer segmentation:
+## 🚀 Getting Started
+
+### Prerequisites
+
 ```bash
-podman compose exec spark-submit /opt/spark/bin/spark-submit \
-  --master spark://spark-master:7077 \
-  /opt/spark/pipelines/example_customer_rfm.py
+# Install PySpark 3.5+
+pip install pyspark==3.5.0
+
+# Install additional dependencies as needed
+pip install boto3  # For AWS S3
 ```
 
-### ETL Pipeline
-Data cleaning, validation, and enrichment:
+### Environment Variables
+
+Set the following environment variables for secure credential management:
+
 ```bash
-podman compose exec spark-submit /opt/spark/bin/spark-submit \
-  --master spark://spark-master:7077 \
-  /opt/spark/pipelines/example_etl_pipeline.py
+# MySQL/Database
+export MYSQL_HOST="your-host"
+export MYSQL_PORT="3306"
+export MYSQL_DATABASE="your-db"
+export MYSQL_USER="your-user"
+export MYSQL_PASSWORD="your-password"
+
+# AWS S3
+export AWS_ACCESS_KEY_ID="your-access-key"
+export AWS_SECRET_ACCESS_KEY="your-secret-key"
+export AWS_REGION="us-east-1"
+
+# MinIO
+export MINIO_ACCESS_KEY="your-access-key"
+export MINIO_SECRET_KEY="your-secret-key"
+export MINIO_ENDPOINT="http://localhost:9000"
+
+# Kafka
+export KAFKA_BOOTSTRAP_SERVERS="localhost:9092"
+export KAFKA_TOPIC="your-topic"
+
+# Cloudant
+export CLOUDANT_APIKEY="your-api-key"
+export CLOUDANT_HOST="your-host"
+export CLOUDANT_USERNAME="your-username"
 ```
 
-### Sales Analysis
-Multi-dimensional sales reporting by category and store:
+### Running Examples
+
 ```bash
-podman compose exec spark-submit /opt/spark/bin/spark-submit \
-  --master spark://spark-master:7077 \
-  /opt/spark/pipelines/example_sales_analysis.py
+# Basic Spark application
+python basic_spark_app.py
+
+# RDD operations tutorial
+python rdd_operations_tutorial.py
+
+# MySQL integration
+python pyspark_mysql.py
+python mysql_multi_connection.py
+
+# S3 operations
+python read_s3.py
+python write_to_s3.py
+
+# Kafka streaming
+python write_to_kafka.py
+
+# Submit to cluster
+spark-submit --master yarn --deploy-mode cluster your_script.py
 ```
 
-### Data Quality Checks
-Identify nulls, duplicates, and invalid records:
-```bash
-podman compose exec spark-submit /opt/spark/bin/spark-submit \
-  --master spark://spark-master:7077 \
-  /opt/spark/pipelines/example_data_quality.py
-```
+## 📦 Updated Dependencies
 
-## MySQL details
-- Host (from containers): `mysql`
-- Port: `3306`
-- Database: `sparkdb`
-- User: `spark`
-- Password: `sparkpass`
+### MySQL Connector
+- **Old**: `mysql-connector-java-8.0.24.jar`
+- **New**: `mysql-connector-j-8.3.0.jar`
+- **Driver Class**: `com.mysql.cj.jdbc.Driver`
 
-## Notes
-- JDBC driver is pulled via `spark.jars.packages` and cached under `/tmp/.ivy2`.
-- Sample input data: `pipelines/data/sample.csv`
+### AWS SDK
+- **Old**: `software.amazon.awssdk:bundle:2.17.178`
+- **New**: `software.amazon.awssdk:bundle:2.25.11`
+
+### Kafka
+- **Package**: `org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0`
+
+### Kudu
+- **Package**: `org.apache.kudu:kudu-spark3_2.12:1.17.0`
+
+### Iceberg
+- **Package**: `org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0`
+
+## 🔧 Key Updates
+
+### Deprecated Features Replaced
+
+1. **HiveContext** → `SparkSession.builder.enableHiveSupport()`
+2. **SQLContext** → `SparkSession`
+3. **Old MySQL Driver** → `com.mysql.cj.jdbc.Driver`
+4. **SparkConf without builder** → Modern builder pattern
+
+### New Features Added
+
+1. **Adaptive Query Execution** - Enabled by default
+2. **Type Hints** - Added to all functions
+3. **Environment Variables** - For secure credential management
+4. **Error Handling** - Comprehensive try-catch blocks
+5. **Documentation** - Detailed docstrings
+
+## 📚 Additional Resources
+
+- [Apache Spark Documentation](https://spark.apache.org/docs/latest/)
+- [PySpark API Reference](https://spark.apache.org/docs/latest/api/python/)
+- [Spark SQL Guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
+
+## ⚠️ Security Notes
+
+- Never commit credentials to version control
+- Use environment variables or secret management systems
+- Enable SSL/TLS for database connections
+- Use IAM roles when running on cloud platforms
+
+## 📝 License
+
+This is a tutorial collection for educational purposes.
+
+## 🤝 Contributing
+
+Feel free to submit issues and enhancement requests!
+
+---
+
+**Last Updated**: January 2026  
+**PySpark Version**: 3.5+  
+**Python Version**: 3.8+
