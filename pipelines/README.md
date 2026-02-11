@@ -27,7 +27,6 @@ This repository contains updated PySpark code examples following modern best pra
 - **`read_s3.py`** - Read JSON files from S3
 - **`read_s3_csv.py`** - Read CSV files from S3
 - **`write_to_s3.py`** - Write data to S3 in JSON format
-- **`writeS3.py`** - Alternative S3 write example
 
 ### Object Storage
 - **`connect_to_minio.py`** - MinIO S3-compatible storage with Iceberg support
